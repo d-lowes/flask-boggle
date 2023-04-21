@@ -35,15 +35,13 @@ def score_word():
     is in the word list ; return a JSON response"""
 
     game_id = request.json["gameId"]
-    word = request.json["word"]
+    word = request.json["word"].upper()
 
     game = games[game_id]
-    print("game =", game)
 
     if not game.is_word_in_word_list(word):
         return jsonify({"result": "not-word"})
     elif not game.check_word_on_board(word):
         return jsonify({"result": "not-on-board"})
-    else:
-        return jsonify({"result": "ok"})
+    return jsonify({"result": "ok"})
 
