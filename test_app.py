@@ -49,6 +49,16 @@ class BoggleAppTestCase(TestCase):
 
         with self.client as client:
             ...
+            response = client.post('/api/new-game')
+            json = response.get_json()
+
+            game_id = json["gameId"]
+            game = games[game_id]
+            game.board = [["P","E","C","A","N"],
+                          ["P","A","L","I","N"],
+                          ["E","R","U","L","E"],
+		                  ["T","R","E","T","O"],
+                          ["F","F","E","U","S"]]
             # make a post request to /api/new-game
             # get the response body as json using .get_json()
             # find that game in the dictionary of games (imported from app.py above)
@@ -58,3 +68,17 @@ class BoggleAppTestCase(TestCase):
             # test to see that a valid word on the altered board returns {'result': 'ok'}
             # test to see that a valid word not on the altered board returns {'result': 'not-on-board'}
             # test to see that an invalid word returns {'result': 'not-word'}
+            test = client.post('/api/score-word' ,
+                                        json={"gameId":game_id, "word":"PECAN"})
+            data = test.get_json()
+            self.assertEqual({"result":"ok"}, data)
+
+            test = client.post('/api/score-word' ,
+                                        json={"gameId":game_id, "word":"BLAH"})
+            data = test.get_json()
+            self.assertEqual({"result":"not-on-board"}, data)
+
+            test = client.post('/api/score-word' ,
+                                        json={"gameId":game_id, "word":"JKSIJ"})
+            data = test.get_json()
+            self.assertEqual({"result":"not-word"}, data)
