@@ -28,3 +28,21 @@ def new_game():
 
 
     return {"gameId": game_id, "board": game.board}
+
+@app.post("/api/score-word")
+def score_word():
+    """Accept a JSON post request with a game id and a word ; check if word
+    is in the word list ; return a JSON response"""
+
+    game_id = request.json["gameId"]
+    word = request.json["word"]
+
+    game = games[game_id]
+    print("game =", game)
+
+    if game.is_word_in_word_list(word):
+        return jsonify({"result": "ok"})
+    if game.check_word_on_board(word):
+        return jsonify({"result": "not-on-board"})
+    if game.word_list.check_word(word):
+        return jsonify({"result": "not-word"})
