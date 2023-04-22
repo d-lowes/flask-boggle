@@ -45,7 +45,8 @@ class BoggleAppTestCase(TestCase):
             self.assertIsInstance(json["board"], list)
 
     def test_score_word(self):
-        """Test if word is valid"""
+        """Create a client instance, retrieve JSON data, create a game board
+        test if a word is on the board, not a word, and not on board"""
 
         with self.client as client:
             ...
